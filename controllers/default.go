@@ -12,6 +12,16 @@ type MainController struct {
 func (c *MainController) Get() {
 	c.Data["Website"] = "原神"
 	c.Data["Email"] = "yuanshen.com"
+	user:=c.Ctx.Input.Query("user")
+	fmt.Println(user)
+	psd:=c.Ctx.Input.Query("psd")
+	fmt.Println(psd)
+
+	if user!="yuanshen"||psd!="123456" {
+		c.Ctx.ResponseWriter.Write([]byte("对不起，数据不对"))
+		return
+	}
+	c.Ctx.ResponseWriter.Write([]byte("数据正确"))
 	c.TplName = "index.tpl"
 }
 
