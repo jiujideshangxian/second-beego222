@@ -1,8 +1,11 @@
 package controllers
 
 import (
+	"beetwo2/models"
+	"encoding/json"
 	"fmt"
 	"github.com/astaxie/beego"
+	"io/ioutil"
 )
 
 type MainController struct {
@@ -10,6 +13,9 @@ type MainController struct {
 }
 
 func (c *MainController) Get() {
+	/*name1:=c.GetString("name")
+	age1,_:=c.GetInt("")*/
+
 	c.Data["Website"] = "原神"
 	c.Data["Email"] = "yuanshen.com"
 	user:=c.Ctx.Input.Query("user")
@@ -26,6 +32,27 @@ func (c *MainController) Get() {
 }
 
 func (c *MainController) Post() {
+
+	/*dataBytes,err:=ioutil.ReadAll(c.Ctx.Request.Body)
+	if err != nil {
+		c.Ctx.WriteString("数据请求失败，请重试")
+
+	}*/
+	//body:=c.Ctx.Request.Body
+	dataByes,err:=ioutil.ReadAll(c.Ctx.Request.Body)
+	if err != nil {
+		c.Ctx.WriteString("数据加载失败，请重试")
+		return
+	}
+	//json包解析
+	var person models.Person
+	err=json.Unmarshal(dataByes,&person)
+	if err != nil {
+		c.Ctx.WriteString("数据解析失败，请重试")
+		return
+	}
+	fmt.Println("用户名",person.User,"年龄",person.Age)
+	c.Ctx.WriteString("用户名是："+person.User)
 	fmt.Println("post服务器")
 	user:=c.Ctx.Request.FormValue("user")
 	fmt.Println("用户名为",user)
